@@ -72,7 +72,7 @@ public class HomeController {
 
 	/**
 	 * ログインユーザーを登録する。
-	 *
+	 *l
 	 * @param createLoginUserForm ログインユーザーを作成するためのフォーム
 	 * @param bindingResult バリデーションの結果
 	 * @return テンプレート/リダイレクト
