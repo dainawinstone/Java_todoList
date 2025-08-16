@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<link rel = "stylesheet" th:href="@{/css/Create.css}"/>
+	<title>Todo作成</title>
+			
+</head>
+
+<body>
+	<div class="logout-container">
+		<form method="post" th:action="@{/logout}">
+			<button type="submit">ログアウト</button>
+		</form>
+	</div>
+					
+	<h1>Todo作成</h1>
+	
+	<form method="post" th:action="@{/todo/register}" th:object="${createTaskForm}">
+		<p>
+			<label for="task-name">タスク名</label>
+			<input type="text" id="task-name" name="taskName" required>
+		</p>
+			
+		<p>
+			<label for="task-priority">優先度:</label>
+			<select id="task-priority" name="taskPriority">
+				<option value="1">高(1)</option>
+				<option value="2">中(2)</option>
+				<option value="3" selected>低(3)</option>
+			</select>
+		</p>
+			
+		<p>
+			<label for="due-date">締切日:</label>
+			<input type="date" id="due-date"　th:field="*{dueDate}">
+			<span class="error" th:if="${#fields.hasErrors('dueDate')}" th:errors="*{dueDate}"></span>
+		</p>
+					 			
+		<button type="submit">登録</button>	
+	</form>
+	
+	<a href="TodoHome.html" th:href="@{/todo/}" class="back-link">戻る</a>		
+	
+</body>
+</html>

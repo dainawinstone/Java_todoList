@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="jp.levtech.rookie.tutorial.repository.mybatis.TaskMapper">
+	
+	<!-- マッピング設定 -->
+	<resultMap id="taskResultMap" type="jp.levtech.rookie.tutorial.model.Task">
+		<id property="taskId" column="task_id"/>
+		<result property="taskPriority" column="task_priority"/>
+		<result property="taskName" column="task_name"/>
+		<result property="completed" column="completed"/>
+		<result property="dueDate" column="due_date"/>
+		<result property="parentTaskId" column="parent_task_id"/>	
+		
+		<!-- サブタスク取得 -->
+		<collection property="subTasks"
+					 ofType="jp.levtech.rookie.tutorial.model.Task"
+					 select="findByParentId"
+					 column="task_id"/>
+					 		
+	</resultMap>
+	
+	
+	<!-- 全件取得(親タスクのみ -->
+	<select id="findAll" resultMap="taskResultMap">
+		SELECT
+			task_id,
+			task_priority,
+			task_name,			
+			completed,
+			due_date,
+			parent_task_id
+		FROM
+			tasks
+		WHERE
+			parent_task_id IS NULL
+		ORDER BY
+			task_priority,due_date
+			
+	</select>
+	
+	<!-- ID取得で1件取得 -->
+	<select id="findById" resultMap="taskResultMap">
+		SELECT
+			task_id,
+			task_priority,
+			task_name,			
+			completed,
+			due_date,
+			parent_task_id
+		FROM
+			tasks
+		WHERE
+			task_id = #{taskId}
+	</select>
+	
+	<!-- 親IDで子タスクを取得 -->
+	<select id="findByParentId" resultMap="taskResultMap">
+		SELECT
+			task_id,
+			task_priority,
+			task_name,			
+			completed,
+			due_date,
+			parent_task_id
+		FROM
+			tasks
+		WHERE
+			parent_task_id = #{parentId}
+		ORDER BY
+			task_priority,due_date
+	</select>
+	
+	
+	<!-- 新規登録 -->
+	<insert id="register">
+		INSERT INTO tasks (
+			task_priority,
+			task_name,
+			completed,
+			due_date,
+			parent_task_id
+		) VALUES (
+			#{taskPriority},
+			#{taskName},
+			#{completed},
+			#{dueDate},
+			#{parentTaskId}
+		)
+	</insert>
+	
+	<!-- 更新 -->
+	<update id="update">
+		UPDATE
+			tasks
+		SET
+			task_priority = #{taskPriority},
+			task_name = #{taskName},
+			completed = #{completed},
+			due_date = #{dueDate},
+			parent_task_id = #{parentTaskId}
+		WHERE
+			task_id = #{taskId}
+	</update>
+	
+	<!--削除-->
+	<delete id="delete">
+		DELETE FROM
+			tasks
+		WHERE
+			task_id = #{taskId}
+	</delete>
+</mapper>

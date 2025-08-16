@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="jp.levtech.rookie.tutorial.repository.mybatis.LoginUserMapper">
+	<select id="findByUserName" resultType="jp.levtech.rookie.tutorial.model.LoginUser">
+		SELECT
+			User_id,
+			user_name,
+			password,
+			enabled
+		FROM
+			login_users
+		WHERE
+			user_name = #{userName}
+	</select>
+	
+	<insert id="register">
+		INSERT INTO login_users(
+			user_name,
+			password,
+			enabled			
+		)VALUES(
+			#{userName},
+			#{password},
+			#{enabled}		
+		)		
+	</insert>
+</mapper>
+
+

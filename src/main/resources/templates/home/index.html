@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<!--/*
+	th,secから始まる属性はHTMLの仕様では許可されていない。
+	そのため、htmlタグにxmlns:th属性とxmlns:sec属性を追加して、IDLが警告を出さないようにしている。
+ */-->
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<link rel="stylesheet" th:href="@{/css/LoginHome.css}">
+
+<head>
+	<meta charset="UTF-8">
+	<title>Your TodoList</title>
+</head>
+
+<body>
+	<div class="container">
+		<h1>Your TodoList</h1>
+	<!--/* ログアウトが成功した場合はメッセージを表示する。 */-->
+	<span th:if="${param.logout}" style="color: green;">ログアウトが完了しました</span>
+	
+	<div class="button-group">
+		<!--/* ログイン画面へ遷移するためのリンク。 */-->
+		<a href="login.html" th:href="@{/login}" sec:authorize="isAnonymous()">ログイン</a>
+		<!--/* サインイン画面へ遷移するためのリンク。 */-->
+		<a href="signin.html" th:href="@{/signin}" sec:authorize="isAnonymous()">新規登録</a>
+		<!--/* ToDo一覧画面へ遷移するためのリンク。 */-->
+		<a href="../todo/index.html"  th:href="@{/todo/}" sec:authorize="isAuthenticated()">ToDo一覧</a>
+		</div>
+	</div>			
+</body>
+</html>

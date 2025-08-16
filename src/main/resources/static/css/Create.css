@@ -1,0 +1,93 @@
+@charset "UTF-8";
+
+body{
+	font-family: Arial,sans-serif;
+	background-color:#f5f5f5;
+	margin:20px
+}
+
+/*タイトル*/
+h1{
+	color: #333;
+	text-align: center;
+}
+
+/*フォーム全体*/
+form{
+	background-color: #fff;
+	max-width: 500px;
+	margin: 30px auto;
+	padding: 25px 30px;
+	border-radius: 8px;
+	box-shadow: 0 0 10px rgba(0,0,0,0.1)
+}
+
+form p {
+	margin-bottom:20px;
+}
+
+label{
+	display: block;
+	margin-bottom: 5px;
+	color: #555;
+	font-weight:bold	
+}
+
+input[type="text"],
+input[type="date"],
+select{
+	width: 100%;
+	padding: 10px;
+	border: 1px solid #CCC;
+	font-size: 14px;
+	box-sizing: border-box;		
+}
+
+/*登録ボタン*/
+button[type="submit"]{
+	background-color: #4CAF50;
+	color: white;
+	border: none;
+	padding: 12px;
+	width: auto;
+	font-size: 16px;
+	border-radius: 5px;
+	cursor: pointer;
+	transition: background-color 0.3s;	
+}
+
+button[type="submit"]:hover{
+	background-color: #45a049;
+}
+
+/*戻るボタン*/
+.back-link{
+	display: block;
+	text-align: center;
+	margin-top: 20px;
+	color: #4CAF50;
+	text-decoration: none;
+	font-weight: bold;
+}
+	
+
+/*ログアウトボタンの設定*/
+.logout-container {
+	position: absolute;
+	top: 20px;
+	right: 20px;	
+}
+
+.logout-container button {
+	background-color: #7f8c8d;
+	color: white;
+	border: none;	
+	cursor: pointer;
+	transition: background-color 0.3s;
+	font-weight: bold;
+}
+
+.logout-container button:hover {
+	background-color: #c0392b;
+}
+

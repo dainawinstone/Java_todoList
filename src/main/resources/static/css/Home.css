@@ -1,0 +1,156 @@
+/*全体設定*/
+.body{
+	font-family:Arial, sans-serif;
+	background-color: #f5f5f5;
+	margin:20px
+}
+
+
+/*見出し*/
+.h1{
+	color: #333;
+	text-align:center;
+}
+
+
+
+
+/*新規登録ボタン*/
+.button-link{
+	display: inline-block;
+	padding: 10px 20px;		
+	background-color: #4CAF50;
+	color: white;
+	text-decoration: none;
+	border-radius: 5px;
+	margin: 10px 0;
+	margin-left: 40px;
+	margin-bottom: 10px;
+	transition: background-color 0.3s;		
+}
+
+
+/*ログアウトボタン*/
+.logout-container button{
+	position: absolute;
+	top: 20px;
+	right: 20px;
+	background-color:#7f8c8d;
+	color: white;
+	border:none;
+	border-radius: 5px;
+	padding: 10px 15px;
+	cursor: pointer;
+	transition: background-color 0.3s;			
+	
+}
+
+.logout-container button:hover{
+	background-color: #c0392b;
+}
+
+	
+
+/*テーブルの設定*/
+
+table{
+	width: 90%;
+	margin: 20px auto;
+	border-collapse: collapse;
+	background-color:#fff;
+	box-shadow:0 0 10px rgba(0,0,0,0.1);
+		
+}
+
+
+
+table thead{
+	position: sticky;
+	top: 0;
+	z-index: 1;
+	background-color: #eee;	
+}
+
+
+th,td{
+	border: 1px solid #ccc;
+	padding: 12px;
+	text-align: center;
+}
+
+td:nth-child(3){
+	text-align: left;
+}
+
+th{
+	background-color:#eee;
+	/*theadを固定*/
+	position: sticky;
+	font-size: 0.9em;	
+}
+
+th span[id^="arrow"] {
+	color: red;
+  	margin-left: 5px;
+  	font-size: 0.9em;
+}
+
+th.sortable{
+	background-color:#4CAF50;
+	color: white;
+	cursor: pointer;
+	border-radius: 5px;
+	transition:background-color 0.3s;
+}
+
+th.sortable:hover{
+	background-color: #45a049;
+}
+
+/*編集・削除ボタン*/
+
+.edit-button{
+	background-color: #45a049;
+	color:#f5f5f5;	
+	padding: 6px 12px;
+	margin: 2px;
+	border-radius: 4px;
+	border: none;	
+	cursor: pointer;
+	text-decoration:none		
+}
+
+
+
+form{
+	display: inline;
+}
+
+
+/*完了を押したときの挙動*/
+.completed{
+	background-color: #7f8c8d;
+	text-decoration: line-through;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	

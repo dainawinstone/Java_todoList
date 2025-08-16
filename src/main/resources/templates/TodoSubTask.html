@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<title>サブタスクを作成する</title>
+</head>
+<body>
+	<h1>サブタスク作成</h1>
+	<form method="post" th:action="@{/logout}">
+			<button type="submit">ログアウト</button>
+		
+		<form th:action="@{/todo/register}" th:object="${createTaskForm}" method="post">
+			<div>
+				<label>タスク名:</label>
+				<input type="text" th:field="*{taskName}" />
+			</div>
+			
+			<div>
+				<label>優先度:</label>
+				<select th:field="*{taskPriority}">
+					<option value="1">高</option>
+					<option value="2">中</option>
+					<option value="3">低</option>
+				</select>
+			</div>
+			
+			<div>
+				<label>期限:</label>
+				<input type="date" th:field="*{dueDate}"/>
+			</div>
+			
+			<!-- 隠しフィールドで親タスクIDを送信 -->
+			<input type="hidden" th:field="*{parentTaskId}"/>
+			
+			<div>
+				<button type="submit">登録</button>
+			</div>
+		</form>	
+</body>
+</html>

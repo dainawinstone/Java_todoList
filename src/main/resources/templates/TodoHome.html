@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<title>ToDo一覧</title>	
+	<link rel="stylesheet" th:href="@{/css/Home.css}"/>	
+	<script th:src="@{/js/table-sort.js}"></script>
+	<script th:src="@{/js/complete-toggle.js}"></script>
+</head>
+
+<body>
+	<h1>ToDo一覧</h1>
+	<p th:if="${tasks.isEmpty()}">タスクはありません</p>	
+	
+	<div class="register-button">
+		<a th:href="@{/todo/create}" class="button-link">Todo登録</a>
+	</div>	
+	
+	<div class="logout-container">
+		<form method="post" th:action="@{/logout}">
+			<button type="submit">ログアウト</button>
+		</form>	
+	</div>
+
+	<table id="todoTable">
+		<thead>
+			<tr>
+				<th class="sortable" onclick="sortTable(0)">ID <span id="arrow0"></span></th>
+				<th class="sortable" onclick="sortTable(1)">優先度 <span id="arrow1"></span></th>					
+				<th class="sortable" onclick="sortTable(2)">タスク名 <span id="arrow2"></span></th>
+				<th class="sortable" onclick="sortTable(3)">完了 <span id="arrow3"></span></th>
+				<th class="sortable" onclick="sortTable(4)">締切 <span id="arrow4"></span></th>	
+			</tr>
+		</thead>
+
+		<tbody>
+			<!-- ✅ 親タスクループ -->
+			<tr th:each="task : ${tasks}" th:if="${task != null}">
+				<th scope="row" th:text="${task.taskId}"></th>
+				<td th:text="${task.taskPriority}"></td>
+				
+				<td>
+					<span th:text="${task.taskName}"></span>
+					<!-- ✅ 親タスクにだけ「+」ボタン表示 -->
+					<a th:if="${task.parentTaskId == null}"
+					   th:href="@{/todo/{parentId}/subtask/create(parentId=${task.taskId})}"
+					   title="サブタスク追加">+</a>
+				</td>
+
+				<td>
+					<input type="checkbox"
+						th:checked="${task.completed}"
+						th:data-task-id="${task.taskId}"
+						onchange="toggleComplete(this)">
+				</td>
+
+				<td th:text="${task.dueDate}"></td>
+
+				<td><a th:href="@{/todo/{id}/edit(id=${task.taskId})}" class="edit-button">編集</a></td>
+
+				<td>
+					<form method="post" th:action="@{/todo/{id}/delete(id=${task.taskId})}">
+						<button type="submit" onclick="return confirm('本当に削除しますか?')">削除</button>
+					</form>
+				</td>
+			</tr>
+
+			<!-- ✅ サブタスク表示（task の内側でループ） -->
+			<tr th:each="sub : ${task.subTasks}" th:if="${task.subTasks != null}">
+				<th></th>
+				<td th:text="${sub.taskPriority}"></td>
+				<td style="padding-left: 2em;">└ <span th:text="${sub.taskName}"></span></td>
+				<td>
+					<input type="checkbox"
+						th:checked="${sub.completed}"
+						th:data-task-id="${sub.taskId}"
+						onchange="toggleComplete(this)">
+				</td>
+				<td th:text="${sub.dueDate}"></td>
+				<td><a th:href="@{/todo/{id}/edit(id=${sub.taskId})}">編集</a></td>
+				<td>
+					<form method="post" th:action="@{/todo/{id}/delete(id=${sub.taskId})}">
+						<button type="submit" onclick="return confirm('本当に削除しますか?')">削除</button>
+					</form>
+				</td>
+			</tr>
+			<!-- ✅ サブタスクループは必ず親のループ中で行う -->
+		</tbody>
+	</table>
+</body>
+</html>

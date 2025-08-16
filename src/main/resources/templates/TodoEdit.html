@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<title>編集画面</title>	
+	<link rel = "stylesheet" th:href="@{/css/Create.css}"/>
+</head>
+<body>
+	<div class="logout-container">
+		<form method="post" th:action="@{/logout}">
+			<button type="submit">ログアウト</button>
+		</form>
+	</div>
+	
+	<h1>Todo編集</h1>											
+	
+	<!--/* 更新ボタンをクリックした際に /todo/{taskId}/update に対してPOSTメソッドでHTTPリクエストするためのフォーム。 */-->
+	<form method="post" 
+		  th:action="@{/todo/{id}/update(id=${taskId})}"
+		  th:object="${updateTaskForm}">
+		
+		 <!--タスク名-->
+		<label for="task-name">タスク名</label>
+		<input id="task-name" type="text" th:field="*{taskName}" />
+		<div th:if="${#fields.hasErrors('taskName')}" th:errors="*{taskName}"></div>
+		
+		<!--完了-->	
+		<label for="task-status">完了</label>
+		<input id="task-status" type="checkbox" th:field="*{completed}" />
+		
+		<!--優先度-->
+		<label for="task-priority">優先度</label>
+		 <input id="task-priority" type="number" th:field="*{taskPriority}" min="1" max="3"/>
+		 <div th:if="${#fields.hasErrors('taskPriority')}" th:errors="*{taskPriority}"></div>
+		
+		<!--締切日-->
+		<label for="due-date">締切日</label>
+		<input id="due-date" type="date" th:field="*{dueDate}" />
+		<div th:if="${#fields.hasErrors('dueDate')}" th:errors="*{dueDate}"></div>
+		
+		<!--更新ボタン-->			
+		<button type="submit">更新</button>
+			
+	
+	<!--ホーム画面に戻るためのリンク-->	
+	<a th:href="@{/todo/}" class="back-link">戻る</a>
+
+</body>
+</html>
