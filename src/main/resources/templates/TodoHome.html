@@ -31,62 +31,58 @@
 				<th class="sortable" onclick="sortTable(2)">タスク名 <span id="arrow2"></span></th>
 				<th class="sortable" onclick="sortTable(3)">完了 <span id="arrow3"></span></th>
 				<th class="sortable" onclick="sortTable(4)">締切 <span id="arrow4"></span></th>	
+				<th>編集</th>
+				<th>削除</th>
 			</tr>
 		</thead>
 
 		<tbody>
-			<!-- ✅ 親タスクループ -->
-			<tr th:each="task : ${tasks}" th:if="${task != null}">
-				<th scope="row" th:text="${task.taskId}"></th>
-				<td th:text="${task.taskPriority}"></td>
-				
-				<td>
-					<span th:text="${task.taskName}"></span>
-					<!-- ✅ 親タスクにだけ「+」ボタン表示 -->
-					<a th:if="${task.parentTaskId == null}"
-					   th:href="@{/todo/{parentId}/subtask/create(parentId=${task.taskId})}"
-					   title="サブタスク追加">+</a>
-				</td>
-
-				<td>
-					<input type="checkbox"
-						th:checked="${task.completed}"
-						th:data-task-id="${task.taskId}"
-						onchange="toggleComplete(this)">
-				</td>
-
-				<td th:text="${task.dueDate}"></td>
-
-				<td><a th:href="@{/todo/{id}/edit(id=${task.taskId})}" class="edit-button">編集</a></td>
-
-				<td>
-					<form method="post" th:action="@{/todo/{id}/delete(id=${task.taskId})}">
-						<button type="submit" onclick="return confirm('本当に削除しますか?')">削除</button>
-					</form>
-				</td>
-			</tr>
-
-			<!-- ✅ サブタスク表示（task の内側でループ） -->
-			<tr th:each="sub : ${task.subTasks}" th:if="${task.subTasks != null}">
-				<th></th>
-				<td th:text="${sub.taskPriority}"></td>
-				<td style="padding-left: 2em;">└ <span th:text="${sub.taskName}"></span></td>
-				<td>
-					<input type="checkbox"
-						th:checked="${sub.completed}"
-						th:data-task-id="${sub.taskId}"
-						onchange="toggleComplete(this)">
-				</td>
-				<td th:text="${sub.dueDate}"></td>
-				<td><a th:href="@{/todo/{id}/edit(id=${sub.taskId})}">編集</a></td>
-				<td>
-					<form method="post" th:action="@{/todo/{id}/delete(id=${sub.taskId})}">
-						<button type="submit" onclick="return confirm('本当に削除しますか?')">削除</button>
-					</form>
-				</td>
-			</tr>
-			<!-- ✅ サブタスクループは必ず親のループ中で行う -->
+		  <!-- 親タスク -->
+		  <tr th:each="task : ${tasks}" th:if="${task.parentTaskId == null}">
+		    <th scope="row" th:text="${task.taskId}"></th>
+		    <td th:text="${task.taskPriority}"></td>
+		    <td>
+		      <span th:text="${task.taskName}"></span>
+		      <a th:href="@{/todo/{parentId}/subtask/create(parentId=${task.taskId})}" title="サブタスク追加">+</a>
+		    </td>
+		    <td>
+		      <input type="checkbox"
+		             th:checked="${task.completed}"
+		             th:data-task-id="${task.taskId}"
+		             onchange="toggleComplete(this)">
+		    </td>
+		    <td th:text="${task.dueDate}"></td>
+		    <td><a th:href="@{/todo/{id}/edit(id=${task.taskId})}" class="edit-button">編集</a></td>
+		    <td>
+		      <form method="post" th:action="@{/todo/{id}/delete(id=${task.taskId})}">
+		        <button type="submit" onclick="return confirm('本当に削除しますか?')">削除</button>
+		      </form>
+		    </td>
+		  </tr>
+		  
+		  <!-- ★ 修正ポイント：この<tr>は親<tr>の外側に書く必要があります -->
+		  <!-- サブタスク（親IDが一致するものだけ） -->
+		  <tr th:each="subTask : ${tasks}"
+		      th:if="${subTask.parentTaskId != null and subTask.parentTaskId == task.taskId}">
+		    <th></th>
+		    <td th:text="${subTask.taskPriority}"></td>
+		    <td style="padding-left: 2em;">└ <span th:text="${subTask.taskName}"></span></td>
+		    <td>
+		      <input type="checkbox"
+		             th:checked="${subTask.completed}"
+		             th:data-task-id="${subTask.taskId}"
+		             onchange="toggleComplete(this)">
+		    </td>
+		    <td th:text="${subTask.dueDate}"></td>
+		    <td><a th:href="@{/todo/{id}/edit(id=${subTask.taskId})}">編集</a></td>
+		    <td>
+		      <form method="post" th:action="@{/todo/{id}/delete(id=${subTask.taskId})}">
+		        <button type="submit" onclick="return confirm('本当に削除しますか?')">削除</button>
+		      </form>
+		    </td>
+		  </tr>
 		</tbody>
+
 	</table>
 </body>
 </html>
