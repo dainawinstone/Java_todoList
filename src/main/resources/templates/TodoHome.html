@@ -37,7 +37,7 @@
 
         <tbody>
             <!-- 親タスクループ -->
-            <th:block th:each="task : ${tasks}" th:if="${task.parentTaskId == null}">
+            <th:block th:each="task : ${tasks}" >
                 <!-- 親タスク行 -->
                 <tr>
                     <th scope="row" th:text="${task.taskId}"></th>

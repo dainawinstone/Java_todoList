@@ -32,9 +32,7 @@
 			due_date,
 			parent_task_id
 		FROM
-			tasks
-		WHERE
-			parent_task_id IS NULL
+			tasks		
 		ORDER BY
 			task_priority,due_date
 			
