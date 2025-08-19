@@ -24,21 +24,16 @@ public class WebSecurityConfig {
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		http
-			// formでのログインに関する設定
-			.formLogin(form -> form
-				// ログイン画面のパスを /login に設定する。
-				.loginPage("/login")				
-				
-				// ログイン画面へのアクセスを全ユーザーに許可する。
+			// formのログインに関する設定
+			.formLogin(form -> form				
+				.loginPage("/login")								
 				.permitAll()
 			)
+			
 			// ログアウトに関する設定
 			.logout(logout -> logout
-				// ログアウト機能のパスを /logout に設定する。
 				.logoutUrl("/logout")
-				// ログアウトが成功した場合にリダイレクトするパスを /?logout に設定する。
 				.logoutSuccessUrl("/?logout")
-				// ログアウト機能へのアクセスを全ユーザーに許可する。
 				.permitAll()
 			)
 			// 認可に関する設定
@@ -51,7 +46,7 @@ public class WebSecurityConfig {
 				.permitAll()
 				// その他へのアクセスを認証済みのユーザーのみに制限する。
 				.anyRequest()
-				.authenticated()
+				.authenticated()											
 			);
 		return http.build();
 	}
@@ -63,8 +58,9 @@ public class WebSecurityConfig {
 	 */
 	@Bean
 	public PasswordEncoder passwordEncoder() {
-		// bcryptと呼ばれる強力なハッシュ関数を利用してパスワードを暗号化するエンコーダーを返す。
 		return new BCryptPasswordEncoder();
 	}
+	
+	
 
 }

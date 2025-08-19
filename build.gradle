@@ -47,6 +47,15 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+	
+	//LINE messagingAPI クライアント
+	implementation 'com.linecorp.bot:line-bot-messaging-api-client:9.10.1'
+	
+	//Spring Boot 連携用（webhookハンドラやClientを簡単に使う）
+	implementation 'com.linecorp.bot:line-bot-spring-boot-webmvc:9.10.1'
+    implementation 'com.linecorp.bot:line-bot-spring-boot-client:9.10.1'
+	
+	
 }
 
 tasks.named('test') {

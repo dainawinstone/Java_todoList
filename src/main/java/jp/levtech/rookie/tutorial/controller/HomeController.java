@@ -37,9 +37,8 @@ public class HomeController {
 	 * @param passwordEncoder パスワードのエンコーダー
 	 */
 	public HomeController(LoginUserRepository loginUserRepository, PasswordEncoder passwordEncoder) {
-		// ログインユーザーを管理するリポジトリを初期化する。
+		// ログインユーザーを管理するリポジトリ、パスワードのエンコーダーを初期化する。
 		this.loginUserRepository = loginUserRepository;
-		// パスワードのエンコーダーを初期化する。
 		this.passwordEncoder = passwordEncoder;
 	}
 
@@ -62,11 +61,8 @@ public class HomeController {
 	 */
 	@GetMapping("/signin")
 	public String create(Model model) {
-		// フォームを表す変数createLoginUserFormを定義する。
 		CreateLoginUserForm createLoginUserForm = new CreateLoginUserForm();
-		// 変数createLoginUserFormをテンプレート側からcreateLoginUserFormという名前の変数として利用するための設定を追加する。
 		model.addAttribute("createLoginUserForm", createLoginUserForm);
-		// レンダリングに利用するテンプレート名を返す。
 		return "home/signin";
 	}
 
@@ -79,9 +75,9 @@ public class HomeController {
 	 */
 	@PostMapping("/signin")
 	public String register(@ModelAttribute @Valid CreateLoginUserForm createLoginUserForm, BindingResult bindingResult) {
-		// バリデーションエラーがある場合。
+		
+		// バリデーションエラーがある場合、再度作成画面を返す。
 		if (bindingResult.hasErrors()) {
-			// 再度作成画面を返す。
 			return "home/signin";
 		}
 		// ログインユーザーを表す変数loginUserを初期化する。
@@ -94,7 +90,6 @@ public class HomeController {
 		LoginUser loginUser = new LoginUser(0L, userName, encodedPassword, true);
 		// ログインユーザーを管理するリポジトリに、ログインユーザーを作成するよう依頼する。
 		loginUserRepository.register(loginUser);
-		// リダイレクトするためのHTTPレスポンスを返す。
 		return "redirect:/login";
 	}
 
@@ -105,7 +100,6 @@ public class HomeController {
 	 */
 	@GetMapping("/login")
 	public String login() {
-		// レンダリングに利用するテンプレート名を返す。
 		return "home/login";
 	}
 

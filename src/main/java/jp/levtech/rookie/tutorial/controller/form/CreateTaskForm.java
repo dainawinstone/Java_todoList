@@ -22,14 +22,25 @@ public class CreateTaskForm {
 	/**
 	 * タスクの優先度を表すプロパティ
 	 */	
+	@NotNull(message = "優先度は必須です") 
 	private Integer taskPriority;
 	
-	
-	private Long parentTaskId;
+	/*
+	 * 締切日を表すプロパティ
+	 */
 	
 	@NotNull(message = "締切日は必須です")
 	private LocalDate dueDate;
 	
+	/*
+	 * 親IDを表すプロパティ
+	 */
+	
+	private Long parentTaskId;
+	
+	/*
+	 * タスクが完了したかどうかを表すプロパティ
+	 */
 	private boolean completed;
 	
 	

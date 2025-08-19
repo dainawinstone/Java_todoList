@@ -102,7 +102,7 @@ public class TodoController {
 			BindingResult bindingResult,
 			Model model){
 		
-		/*入力エラーがある場合、作成画面に再表示する*/
+		//入力エラーがある場合、作成画面に再表示する
 		if (bindingResult.hasErrors()) {
 			return "TodoCreate";
 		}
@@ -198,27 +198,18 @@ public class TodoController {
 						
 					
 	}
-	
-	/*
-	 * @RequestParam String taskName,
-		@RequestParam(defaultValue="3")Integer taskPriority,
-		@RequestParam(defaultValue = "false")boolean completed,
-		@RequestParam(required=false) LocalDate dueDate)
-	 */
-		
-	
+					
 	/**
 	 * サブタスクを追加する
 	 */
 	@GetMapping("/todo/{parentId}/subtask/create")
 	public String createSubtask(@PathVariable long parentId, Model model) {
 	    CreateTaskForm createTaskForm = new CreateTaskForm();
-	    createTaskForm.setParentTaskId(parentId); // 親タスクIDを事前にセット
-	    model.addAttribute("createTaskForm", createTaskForm); // ★フォーム名に注意！
+	    createTaskForm.setParentTaskId(parentId); 
+	    model.addAttribute("createTaskForm", createTaskForm); 
 	    return "TodoSubTask";
 	}
-				 	
-	
+				 		
 	
 	/**
 	 * タスクを削除する
