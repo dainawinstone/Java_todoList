@@ -17,6 +17,7 @@ import jp.levtech.rookie.tutorial.repository.LoginUserRepository;
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
+	
 	/**
 	 * ログインユーザーを管理するリポジトリ
 	 */
@@ -28,12 +29,15 @@ public class CustomUserDetailsService implements UserDetailsService {
 	 * @param loginUserRepository ログインユーザーを管理するリポジトリ 
 	 */
 	public CustomUserDetailsService(LoginUserRepository loginUserRepository) {
-		//ログインユーザーを管理するリポジトリを初期化する
 		this.loginUserRepository = loginUserRepository;		
 	}
 	
 	/**
 	 * ユーザー名からログインユーザーの詳細を取得する
+	 * 
+	 * @param username 入力されたユーザー名
+	 * @return フレームワークが扱えるユーザー詳細（権限や有効/無効フラグを含む）
+	 * @throws UsernameNotFoundException ユーザーが見つからない場合
 	 */
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException{

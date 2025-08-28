@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="jp.levtech.rookie.tutorial.repository.mybatis.TodoListMapper">
+
+  <select id="findByUserId" resultType="jp.levtech.rookie.tutorial.model.TodoList">
+    SELECT
+      list_id    AS listId,
+      user_id    AS userId,
+      name,
+      created_at AS createdAt,
+      updated_at AS updatedAt
+    FROM todo_lists
+    WHERE user_id = #{userId}
+  </select>
+
+  <!-- 存在しなければ INSERT、いずれにせよ list_id を返す（1クエリ） -->
+  <select id="getOrCreateIdByUserId" resultType="long">
+    WITH ins AS (
+      INSERT INTO todo_lists (user_id, name)
+      VALUES (#{userId}, COALESCE(#{name}, 'My ToDo'))
+      ON CONFLICT (user_id) DO NOTHING
+      RETURNING list_id
+    )
+    SELECT list_id FROM ins
+    UNION ALL
+    SELECT list_id FROM todo_lists WHERE user_id = #{userId}
+    LIMIT 1
+  </select>
+
+</mapper>

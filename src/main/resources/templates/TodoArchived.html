@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>ToDo保管一覧</title>
+  <link rel="stylesheet" th:href="@{/css/Home.css}"/>
+  <script th:src="@{/js/complete-toggle.js}"></script>
+  <meta name="_csrf" th:content="${_csrf.token}">
+  <meta name="_csrf_header" th:content="${_csrf.headerName}">
+</head>
+<body>
+  <h1>ToDo保管一覧</h1>
+  <p th:if="${#lists.isEmpty(rows)}">保管中のタスクはありません</p>
+
+  <!-- アクションバー -->
+  <div style="display:flex; gap:8px; align-items:center; margin:10px 0;">
+    <!-- 未保管一覧へ -->
+    <a th:href="@{/todo/(sort=${sort}, order=${order})}">
+      <button>未保管一覧へ</button>
+    </a>
+
+    <!-- （任意）完了の一括削除 -->
+    <form method="post" th:action="@{/todo/delete-completed}">
+      <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+      <button type="submit" onclick="return confirm('完了済みを削除します。元に戻せません。続行しますか？')">完了を一括削除</button>
+    </form>
+  </div>
+
+  <table id="todoTable">
+    <thead>
+      <tr>
+        <th class="sortable">
+          <a th:href="@{/todo/archived(sort='id', order=${order}=='asc' ? 'desc' : 'asc')}">ID</a>
+          <span class="sort-arrow" th:text="${sort}=='id' ? (${order}=='asc' ? '▲' : '▼') : ''"></span>
+        </th>
+        <th class="sortable">
+          <a th:href="@{/todo/archived(sort='priority', order=${order}=='asc' ? 'desc' : 'asc')}">優先度</a>
+          <span class="sort-arrow" th:text="${sort}=='priority' ? (${order}=='asc' ? '▲' : '▼') : ''"></span>
+        </th>
+        <th class="sortable">
+          <a th:href="@{/todo/archived(sort='name', order=${order}=='asc' ? 'desc' : 'asc')}">タスク名</a>
+          <span class="sort-arrow" th:text="${sort}=='name' ? (${order}=='asc' ? '▲' : '▼') : ''"></span>
+        </th>
+        <th class="sortable">
+          <a th:href="@{/todo/archived(sort='done', order=${order}=='asc' ? 'desc' : 'asc')}">完了</a>
+          <span class="sort-arrow" th:text="${sort}=='done' ? (${order}=='asc' ? '▲' : '▼') : ''"></span>
+        </th>
+        <th class="sortable">
+          <a th:href="@{/todo/archived(sort='due', order=${order}=='asc' ? 'desc' : 'asc')}">締切</a>
+          <span class="sort-arrow" th:text="${sort}=='due' ? (${order}=='asc' ? '▲' : '▼') : ''"></span>
+        </th>
+        <th>復元</th>
+        <th>削除</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr th:each="row : ${rows}"
+          th:classappend="${'level-' + row.level()} + (${row.task().completed} ? ' completed' : '')">
+        <th scope="row" th:text="${row.task().taskId}"></th>
+        <td th:text="${row.task().taskPriority}"></td>
+
+        <td class="task-name">
+          <span th:if="${row.level()==1}">└ </span>
+          <span th:text="${row.task().taskName}"></span>
+        </td>
+
+        <td>
+          <input type="checkbox" th:checked="${row.task().completed}" disabled="disabled">
+        </td>
+
+        <td th:text="${row.task().dueDate}"></td>
+
+        <td>
+          <form method="post" th:action="@{/todo/{id}/restore(id=${row.task().taskId})}">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+            <input type="hidden" name="backToArchived" value="true">
+            <button type="submit">復元</button>
+          </form>
+        </td>
+
+        <td>
+          <form method="post" th:action="@{/todo/{id}/delete(id=${row.task().taskId})}">
+            <button type="submit" onclick="return confirm('本当に削除しますか?')">削除</button>
+          </form>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</body>
+</html>

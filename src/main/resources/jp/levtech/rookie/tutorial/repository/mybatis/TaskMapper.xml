@@ -1,112 +1,129 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE mapper
-  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="jp.levtech.rookie.tutorial.repository.mybatis.TaskMapper">
-	
-	<!-- マッピング設定 -->
-	<resultMap id="taskResultMap" type="jp.levtech.rookie.tutorial.model.Task">
-		<id property="taskId" column="task_id"/>
-		<result property="taskPriority" column="task_priority"/>
-		<result property="taskName" column="task_name"/>
-		<result property="completed" column="completed"/>
-		<result property="dueDate" column="due_date"/>
-		<result property="parentTaskId" column="parent_task_id"/>	
-		
-		<!-- サブタスク取得 -->
-		<collection property="subTasks"
-					 ofType="jp.levtech.rookie.tutorial.model.Task"
-					 select="findByParentId"
-					 column="task_id"/>
-					 		
-	</resultMap>
-	
-	
-	<!-- 全件取得(親タスクのみ -->
-	<select id="findAll" resultMap="taskResultMap">
-		SELECT
-			task_id,
-			task_priority,
-			task_name,			
-			completed,
-			due_date,
-			parent_task_id
-		FROM
-			tasks		
-		ORDER BY
-			task_priority,due_date
-			
-	</select>
-	
-	<!-- ID取得で1件取得 -->
-	<select id="findById" resultMap="taskResultMap">
-		SELECT
-			task_id,
-			task_priority,
-			task_name,			
-			completed,
-			due_date,
-			parent_task_id
-		FROM
-			tasks
-		WHERE
-			task_id = #{taskId}
-	</select>
-	
-	<!-- 親IDで子タスクを取得 -->
-	<select id="findByParentId" resultMap="taskResultMap">
-		SELECT
-			task_id,
-			task_priority,
-			task_name,			
-			completed,
-			due_date,
-			parent_task_id
-		FROM
-			tasks
-		WHERE
-			parent_task_id = #{parentId}
-		ORDER BY
-			task_priority,due_date
-	</select>
-	
-	
-	<!-- 新規登録 -->
-	<insert id="register">
-		INSERT INTO tasks (
-			task_priority,
-			task_name,
-			completed,
-			due_date,
-			parent_task_id
-		) VALUES (
-			#{taskPriority},
-			#{taskName},
-			#{completed},
-			#{dueDate},
-			#{parentTaskId}
-		)
-	</insert>
-	
-	<!-- 更新 -->
-	<update id="update">
-		UPDATE
-			tasks
-		SET
-			task_priority = #{taskPriority},
-			task_name = #{taskName},
-			completed = #{completed},
-			due_date = #{dueDate},
-			parent_task_id = #{parentTaskId}
-		WHERE
-			task_id = #{taskId}
-	</update>
-	
-	<!--削除-->
-	<delete id="delete">
-		DELETE FROM
-			tasks
-		WHERE
-			task_id = #{taskId}
-	</delete>
+
+  <!-- マッピング -->
+  <resultMap id="taskResultMap" type="jp.levtech.rookie.tutorial.model.Task">
+    <id     property="taskId"       column="task_id"/>
+    <result property="taskPriority" column="task_priority"/>
+    <result property="taskName"     column="task_name"/>
+    <result property="completed"    column="completed"     jdbcType="BOOLEAN"/>
+    <result property="dueDate"      column="due_date"      jdbcType="DATE"/>
+    <result property="parentTaskId" column="parent_task_id"/>
+    <result property="archived"     column="archived"      jdbcType="BOOLEAN"/>
+    <result property="archivedAt"   column="archived_at"   jdbcType="TIMESTAMP"/>
+    <result property="listId"       column="list_id"/>
+
+    <!-- 子タスク -->
+    <collection property="subTasks"
+                ofType="jp.levtech.rookie.tutorial.model.Task"
+                select="findByParentId"
+                column="{listId=list_id,parentId=task_id}"/>
+  </resultMap>
+
+  <!-- 親タスク（未保管） -->
+  <select id="findAllByList" resultMap="taskResultMap">
+    SELECT
+      task_id, task_priority, task_name, completed, due_date,
+      parent_task_id, archived, archived_at, list_id
+    FROM tasks
+    WHERE archived = false
+      AND parent_task_id IS NULL
+      AND list_id = #{listId}
+    ORDER BY task_priority, due_date
+  </select>
+
+  <!-- 親タスク（保管） -->
+  <select id="findAllArchivedByList" resultMap="taskResultMap">
+    SELECT
+      task_id, task_priority, task_name, completed, due_date,
+      parent_task_id, archived, archived_at, list_id
+    FROM tasks
+    WHERE archived = true
+      AND parent_task_id IS NULL
+      AND list_id = #{listId}
+    ORDER BY archived_at DESC NULLS LAST, task_id DESC
+  </select>
+
+  <!-- 1件取得（必要なら listId 条件付き版も用意可） -->
+  <select id="findById" resultMap="taskResultMap">
+    SELECT
+      task_id, task_priority, task_name, completed, due_date,
+      parent_task_id, archived, archived_at, list_id
+    FROM tasks
+    WHERE task_id = #{taskId}
+  </select>
+
+  <!-- 子タスク（未保管、listIdで限定） -->
+  <select id="findByParentId" resultMap="taskResultMap">
+    SELECT
+      task_id, task_priority, task_name, completed, due_date,
+      parent_task_id, archived, archived_at, list_id
+    FROM tasks
+    WHERE parent_task_id = #{parentId}
+      AND archived = false
+      AND list_id = #{listId}
+    ORDER BY task_priority, due_date
+  </select>
+
+  <!-- 登録 -->
+  <insert id="register" useGeneratedKeys="true" keyProperty="taskId" keyColumn="task_id">
+    INSERT INTO tasks (
+      task_priority, task_name, completed, due_date,
+      parent_task_id, archived, archived_at, list_id
+    ) VALUES (
+      #{taskPriority}, #{taskName}, #{completed}, #{dueDate},
+      #{parentTaskId}, #{archived}, #{archivedAt}, #{listId}
+    )
+  </insert>
+
+  <!-- 更新（自分のリスト限定） -->
+  <update id="update">
+    UPDATE tasks
+    SET task_priority  = #{taskPriority},
+        task_name      = #{taskName},
+        completed      = #{completed},
+        due_date       = #{dueDate},
+        parent_task_id = #{parentTaskId},
+        archived       = #{archived},
+        archived_at    = #{archivedAt}
+    WHERE task_id = #{taskId}
+      AND list_id = #{listId}
+  </update>
+
+  <!-- 単体削除（自分のリスト限定） -->
+  <delete id="delete">
+    DELETE FROM tasks
+    WHERE task_id = #{taskId}
+      AND list_id = #{listId}
+  </delete>
+
+  <!-- 一括削除（完了・未保管・自分のリスト） -->
+  <delete id="deleteCompleted">
+    DELETE FROM tasks
+    WHERE completed = true
+      AND archived  = false
+      AND list_id   = #{listId}
+  </delete>
+
+  <!-- 一括保管 -->
+  <update id="archiveCompleted">
+    UPDATE tasks
+       SET archived    = true,
+           archived_at = NOW()
+     WHERE completed = true
+       AND archived  = false
+       AND list_id   = #{listId}
+  </update>
+
+  <!-- 復元（自分のリスト限定） -->
+  <update id="restoreArchivedById">
+    UPDATE tasks
+       SET archived    = false,
+           archived_at = NULL
+     WHERE task_id = #{id}
+       AND list_id = #{listId}
+  </update>
+
 </mapper>

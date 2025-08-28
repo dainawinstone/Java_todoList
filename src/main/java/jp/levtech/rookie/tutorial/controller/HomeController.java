@@ -2,6 +2,7 @@ package jp.levtech.rookie.tutorial.controller;
 
 import jakarta.validation.Valid;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -71,26 +72,46 @@ public class HomeController {
 	 *
 	 * @param createLoginUserForm ログインユーザーを作成するためのフォーム
 	 * @param bindingResult バリデーションの結果
+	 * @param model モデル（エラーメッセージ表示用）
 	 * @return テンプレート/リダイレクト
 	 */
 	@PostMapping("/signin")
-	public String register(@ModelAttribute @Valid CreateLoginUserForm createLoginUserForm, BindingResult bindingResult) {
+	public String register(@ModelAttribute @Valid CreateLoginUserForm createLoginUserForm, 
+			BindingResult bindingResult,
+			Model model) {
 		
 		// バリデーションエラーがある場合、再度作成画面を返す。
 		if (bindingResult.hasErrors()) {
 			return "home/signin";
 		}
-		// ログインユーザーを表す変数loginUserを初期化する。
-		// パスワードを平文で保存するのは危険なので、エンコードする。
-		// userIdには無効な値として0を設定する。
-		// enabledには利用可能としてtrueを設定する。
 		String userName = createLoginUserForm.getUserName();
-		String rawPassword = createLoginUserForm.getPassword();
-		String encodedPassword = passwordEncoder.encode(rawPassword);
-		LoginUser loginUser = new LoginUser(0L, userName, encodedPassword, true);
-		// ログインユーザーを管理するリポジトリに、ログインユーザーを作成するよう依頼する。
-		loginUserRepository.register(loginUser);
-		return "redirect:/login";
+		
+		if(loginUserRepository.existsByUserName(userName)) {
+			bindingResult.rejectValue("userName", "duplicate", "そのユーザー名は既に使われています");
+			return "home/signin";			
+		}
+		
+		
+		try {
+			//登録処理
+			String rawPassword = createLoginUserForm.getPassword();
+			String encodedPassword = passwordEncoder.encode(rawPassword);
+			LoginUser loginUser = new LoginUser(0L, userName, encodedPassword, true);
+			loginUserRepository.register(loginUser);
+			
+			// 登録完了メッセージを表示するための情報を渡す
+	        model.addAttribute("userName", userName);
+	        return "home/signup-success";
+		}catch(DataIntegrityViolationException e){
+			bindingResult.rejectValue("userName", "duplicate", "そのユーザー名は既に使われています");
+			return "home/signin";						       
+	        
+		}catch(IllegalArgumentException e){
+			bindingResult.rejectValue("userName", "duplicate", "そのユーザー名は既に使われています");
+			return "home/signin";						       	        			
+			
+		}			
+	
 	}
 
 	/**

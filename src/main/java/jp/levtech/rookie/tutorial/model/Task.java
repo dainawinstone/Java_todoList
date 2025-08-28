@@ -1,6 +1,7 @@
 package jp.levtech.rookie.tutorial.model;
 
 import java.time.LocalDate;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,6 +9,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/*
+ * タスクを表すモデル
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -47,5 +51,19 @@ public class Task {
 	 */
 	private  List<Task> subTasks = new ArrayList<>();
 	
+	/**
+	 * 保管フラグのプロパティ
+	 */
+	private boolean archived;
+	
+	/**
+	 * 保管日時を表すプロパティ
+	 */
+	private OffsetDateTime archivedAt;
+	
+	/*
+	 * リストIDを表すプロパティ
+	 */	
+	private Long listId;
 
 }

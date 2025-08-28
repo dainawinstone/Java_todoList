@@ -1,0 +1,22 @@
+# Eclipse
+.classpath
+.project
+.settings/
+.metadata/
+Servers/
+
+# Gradle/Java
+.gradle/
+build/
+bin/
+out/
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Spring Boot secrets
+**/application.properties
+**/application-*.properties
+.env

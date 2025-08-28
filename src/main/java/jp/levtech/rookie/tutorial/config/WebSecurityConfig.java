@@ -42,7 +42,7 @@ public class WebSecurityConfig {
 				.requestMatchers(PathRequest.toStaticResources().atCommonLocations())
 				.permitAll()
 				// ホーム画面とサインイン画面へのアクセスを全ユーザーに許可する。
-				.requestMatchers("/", "/signin")
+				.requestMatchers("/", "/signin","/signin/**","/signup-success")
 				.permitAll()
 				// その他へのアクセスを認証済みのユーザーのみに制限する。
 				.anyRequest()

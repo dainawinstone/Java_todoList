@@ -27,6 +27,14 @@
 			#{enabled}		
 		)		
 	</insert>
+	
+	<!-- 重複チェック: 大文字小文字や前後スペースを無視するなら TRIM と LOWER を使う -->
+	<select id="countByUserName" parameterType="string" resultType="int">
+  		SELECT COUNT(*)
+  		FROM login_users
+  		WHERE LOWER(TRIM(user_name)) = LOWER(TRIM(#{userName}))
+	</select>
+	
 </mapper>
 
 

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- Java側のFQCNと一致させる -->
+<mapper namespace="jp.levtech.rookie.tutorial.repository.mybatis.LoginUserMapper">
+
+  <!-- LoginUser の不変(コンストラクタ)マッピング -->
+  <resultMap id="LoginUserMap" type="jp.levtech.rookie.tutorial.model.LoginUser">
+    <constructor>
+      <idArg column="user_id"   javaType="long"/>
+      <arg   column="user_name" javaType="string"/>
+      <arg   column="password"  javaType="string"/>
+      <arg   column="enabled"   javaType="boolean"/>
+    </constructor>
+  </resultMap>
+
+  <!-- user_name -> LoginUser（enabledは定数1=true） -->
+  <!-- ※DBにenabled列があるなら「, enabled AS enabled」に置き換えてOK -->
+  <select id="findByUserName" resultMap="LoginUserMap">
+    SELECT
+      user_id    AS user_id,
+      user_name  AS user_name,
+      password   AS password,
+      1          AS enabled
+    FROM login_users
+    WHERE user_name = #{userName}
+    LIMIT 1
+  </select>
+
+  <!-- 重複チェック -->
+  <select id="countByUserName" resultType="int">
+    SELECT COUNT(*) FROM login_users WHERE user_name = #{userName}
+  </select>
+
+  <!-- user_name -> user_id -->
+  <select id="findIdByUserName" resultType="long">
+    SELECT user_id
+    FROM login_users
+    WHERE user_name = #{userName}
+    LIMIT 1
+  </select>
+
+  <!-- 新規登録（enabled列がDBに無い前提。あるなら列に追加して値も入れてください） -->
+  <insert id="register">
+    INSERT INTO login_users (user_name, password)
+    VALUES (#{userName}, #{password})
+  </insert>
+
+</mapper>

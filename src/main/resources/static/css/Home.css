@@ -7,7 +7,7 @@
 
 
 /*見出し*/
-.h1{
+h1{
 	color: #333;
 	text-align:center;
 }
@@ -89,21 +89,14 @@ th{
 	font-size: 0.9em;	
 }
 
-th span[id^="arrow"] {
-	color: red;
-  	margin-left: 5px;
-  	font-size: 0.9em;
-}
-
-th.sortable{
+th.sortable a{
 	background-color:#4CAF50;
 	color: white;
-	cursor: pointer;
 	border-radius: 5px;
 	transition:background-color 0.3s;
 }
 
-th.sortable:hover{
+th.sortable a:hover{
 	background-color: #45a049;
 }
 
@@ -120,8 +113,6 @@ th.sortable:hover{
 	text-decoration:none		
 }
 
-
-
 form{
 	display: inline;
 }
@@ -133,7 +124,16 @@ form{
 	text-decoration: line-through;
 }
 
+/* 追加: 親子インデント（rows: level=0/1） */
+.level-0 .task-name { padding-left: 0; }
+.level-1 .task-name { padding-left: 2em; }
 
+/* 追加: サーバー側ソートの矢印表示用（▲▼） */
+.sort-arrow {
+	font-size: 0.9em;
+	opacity: 0.7;
+	margin-left: .25em;
+}
 
 
 
