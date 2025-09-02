@@ -1,156 +1,105 @@
-/*全体設定*/
-.body{
-	font-family:Arial, sans-serif;
-	background-color: #f5f5f5;
-	margin:20px
+/* ========= ベース ========= */
+*,*::before,*::after{ box-sizing:border-box; }
+
+:root{
+  --primary:#4CAF50; --primary-hover:#45a049;
+  --muted:#7f8c8d;   --muted-hover:#6b7a7a;
+  --danger:#e0524d;  --danger-hover:#c9443f;
+  --equal-btn-width:180px;           /* 上部ボタンの共通幅 */
 }
 
-
-/*見出し*/
-h1{
-	color: #333;
-	text-align:center;
+body{
+  font-family:Arial, sans-serif;
+  background-color:#f5f5f5;
+  margin:20px;
 }
 
+h1{ color:#333; text-align:center; }
 
+/* ========= ツールバー（左=アクション群 / 右=ログアウト） ========= */
+.toolbar{
+  display:flex; align-items:center; gap:12px; flex-wrap:wrap;
+  margin:12px 40px 18px;
+}
+.toolbar .logout-container{ margin-left:auto; }
 
-
-/*新規登録ボタン*/
-.button-link{
-	display: inline-block;
-	padding: 10px 20px;		
-	background-color: #4CAF50;
-	color: white;
-	text-decoration: none;
-	border-radius: 5px;
-	margin: 10px 0;
-	margin-left: 40px;
-	margin-bottom: 10px;
-	transition: background-color 0.3s;		
+/* 上段ボタン群 */
+.action{
+  display:flex; gap:12px; flex-wrap:wrap; margin:0;
 }
 
+/* ========= ボタン共通 ========= */
+.btn,.button-link,.edit-button{
+  display:inline-flex; align-items:center; justify-content:center;
+  padding:10px 18px; min-height:44px;          /* 高さ統一 */
+  border:none; border-radius:10px; font-weight:600;
+  cursor:pointer; text-decoration:none;
+  background:var(--primary); color:#fff;
+  box-shadow:0 2px 6px rgba(0,0,0,.08);
+  transition:transform .02s ease, box-shadow .2s, background-color .2s, color .2s;
+}
+.btn:hover,.button-link:hover,.edit-button:hover{
+  background:var(--primary-hover);
+  transform:translateY(-1px);
+  box-shadow:0 4px 10px rgba(0,0,0,.12);
+}
+.btn:focus{ outline:2px solid #333; outline-offset:2px; }
+
+/* バリエーション */
+.btn--secondary{ background:#fff; color:var(--primary); border:2px solid var(--primary); }
+.btn--secondary:hover{ background:var(--primary); color:#fff; }
+.btn--danger{ background:var(--danger); color:#fff; }
+.btn--danger:hover{ background:var(--danger-hover); }
+.btn--muted{ background:var(--muted); color:#fff; }
+.btn--muted:hover{ background:var(--muted-hover); }
+.btn--sm{ padding:6px 12px; border-radius:8px; }
+
+
+.btn[disabled]{ opacity:.55; cursor:not-allowed; box-shadow:none; }
+
+/* 上段ボタンの幅を完全に揃える */
+.action .btn,
+.action .button-link{ width:var(--equal-btn-width); }
 
 /*ログアウトボタン*/
-.logout-container button{
-	position: absolute;
-	top: 20px;
-	right: 20px;
-	background-color:#7f8c8d;
-	color: white;
-	border:none;
-	border-radius: 5px;
-	padding: 10px 15px;
-	cursor: pointer;
-	transition: background-color 0.3s;			
-	
-}
+.logout-container{ position:static; }
+.logout-container .btn{ position:static; }
 
-.logout-container button:hover{
-	background-color: #c0392b;
-}
-
-	
-
-/*テーブルの設定*/
-
+/* ========= テーブル ========= */
 table{
-	width: 90%;
-	margin: 20px auto;
-	border-collapse: collapse;
-	background-color:#fff;
-	box-shadow:0 0 10px rgba(0,0,0,0.1);
-		
+  width:90%; margin:20px auto; border-collapse:collapse;
+  background:#fff; box-shadow:0 0 10px rgba(0,0,0,.1);
 }
-
-
-
 table thead{
-	position: sticky;
-	top: 0;
-	z-index: 1;
-	background-color: #eee;	
+  position:sticky; top:0; z-index:1; background:#eee;
 }
+th,td{ border:1px solid #ccc; padding:12px; text-align:center; }
+td:nth-child(3){ text-align:left; }
+th{ background:#eee; position:sticky; font-size:.9em; }
 
-
-th,td{
-	border: 1px solid #ccc;
-	padding: 12px;
-	text-align: center;
-}
-
-td:nth-child(3){
-	text-align: left;
-}
-
-th{
-	background-color:#eee;
-	/*theadを固定*/
-	position: sticky;
-	font-size: 0.9em;	
-}
-
+/* 並び替えリンク */
 th.sortable a{
-	background-color:#4CAF50;
-	color: white;
-	border-radius: 5px;
-	transition:background-color 0.3s;
+  background:#4CAF50; color:#fff; border-radius:8px; padding:2px 6px;
+  transition:background-color .3s;
 }
+th.sortable a:hover{ background:#45a049; }
 
-th.sortable a:hover{
-	background-color: #45a049;
+/* 完了行の見た目 */
+.completed{ background:#7f8c8d; text-decoration:line-through; }
+
+/* 親子インデント */
+.level-0 .task-name{ padding-left:0; }
+.level-1 .task-name{ padding-left:2em; }
+
+/* ソート矢印 */
+.sort-arrow{ font-size:.9em; opacity:.7; margin-left:.25em; }
+
+/* 表内ボタン（保険：クラス未設定でも赤に） */
+td form > button{
+  padding:6px 12px; border-radius:8px; border:none;
+  background:var(--danger); color:#fff;
 }
+td form > button:hover{ background:var(--danger-hover); }
 
-/*編集・削除ボタン*/
-
-.edit-button{
-	background-color: #45a049;
-	color:#f5f5f5;	
-	padding: 6px 12px;
-	margin: 2px;
-	border-radius: 4px;
-	border: none;	
-	cursor: pointer;
-	text-decoration:none		
-}
-
-form{
-	display: inline;
-}
-
-
-/*完了を押したときの挙動*/
-.completed{
-	background-color: #7f8c8d;
-	text-decoration: line-through;
-}
-
-/* 追加: 親子インデント（rows: level=0/1） */
-.level-0 .task-name { padding-left: 0; }
-.level-1 .task-name { padding-left: 2em; }
-
-/* 追加: サーバー側ソートの矢印表示用（▲▼） */
-.sort-arrow {
-	font-size: 0.9em;
-	opacity: 0.7;
-	margin-left: .25em;
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-	
+/* フォームは横並び */
+form{ display:inline; }

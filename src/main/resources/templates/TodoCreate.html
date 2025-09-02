@@ -1,46 +1,58 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="ja">
 <head>
-	<meta charset="UTF-8">
-	<link rel = "stylesheet" th:href="@{/css/Create.css}"/>
-	<title>Todo作成</title>
-			
+  <meta charset="UTF-8">
+  <title>Todo作成</title>
+  <link rel="stylesheet" th:href="@{/css/Create.css?v=4}"/>
 </head>
 
 <body>
-	<div class="logout-container">
-		<form method="post" th:action="@{/logout}">
-			<button type="submit">ログアウト</button>
-		</form>
-	</div>
-					
-	<h1>Todo作成</h1>
-	
-	<form method="post" th:action="@{/todo/register}" th:object="${createTaskForm}">
-		<p>
-			<label for="task-name">タスク名</label>
-			<input type="text" id="task-name" name="taskName" required>
-		</p>
-			
-		<p>
-			<label for="task-priority">優先度:</label>
-			<select id="task-priority" name="taskPriority">
-				<option value="1">高(1)</option>
-				<option value="2">中(2)</option>
-				<option value="3" selected>低(3)</option>
-			</select>
-		</p>
-			
-		<p>
-			<label for="due-date">締切日:</label>
-			<input type="date" id="due-date"　th:field="*{dueDate}">
-			<span class="error" th:if="${#fields.hasErrors('dueDate')}" th:errors="*{dueDate}"></span>
-		</p>
-					 			
-		<button type="submit">登録</button>	
-	</form>
-	
-	<a href="TodoHome.html" th:href="@{/todo/}" class="back-link">戻る</a>		
-	
+  <!-- ツールバー：右にログアウト -->
+  <div class="toolbar">
+    <div class="logout-container">
+      <form id="logoutForm" method="post" th:action="@{/logout}">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+        <button type="submit" class="btn btn--muted">ログアウト</button>
+      </form>
+    </div>
+  </div>
+
+  <h1>Todo作成</h1>
+
+  <!-- 登録フォーム（カード化） -->
+  <form class="form-card"
+        method="post"
+        th:action="@{/todo/register}"
+        th:object="${createTaskForm}">
+    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+
+    <label for="task-name">タスク名</label>
+    <input id="task-name" type="text"
+           th:field="*{taskName}"
+           required autocomplete="off"
+           th:errorclass="is-invalid"/>
+    <div class="error" th:if="${#fields.hasErrors('taskName')}" th:errors="*{taskName}"></div>
+
+    <label for="task-priority">優先度</label>
+    <select id="task-priority"
+            th:field="*{taskPriority}"
+            th:errorclass="is-invalid">
+      <option value="1">高(1)</option>
+      <option value="2">中(2)</option>
+      <option value="3">低(3)</option>
+    </select>
+    <div class="error" th:if="${#fields.hasErrors('taskPriority')}" th:errors="*{taskPriority}"></div>
+
+    <label for="due-date">締切日</label>
+    <input id="due-date" type="date"
+           th:field="*{dueDate}"
+           th:errorclass="is-invalid"
+           th:attr="min=${#dates.format(#dates.createNow(),'yyyy-MM-dd')}"/>
+    <div class="error" th:if="${#fields.hasErrors('dueDate')}" th:errors="*{dueDate}"></div>
+
+    <button type="submit" class="btn btn--primary btn--block">登録</button>
+  </form>
+
+  <a th:href="@{/todo/}" class="btn btn--secondary btn--ghost center-link">戻る</a>
 </body>
 </html>

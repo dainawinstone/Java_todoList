@@ -14,6 +14,8 @@
     <result property="archived"     column="archived"      jdbcType="BOOLEAN"/>
     <result property="archivedAt"   column="archived_at"   jdbcType="TIMESTAMP"/>
     <result property="listId"       column="list_id"/>
+    <result property="userId"       column="user_id"/>
+    <result property="userSeq"      column="user_seq"/>
 
     <!-- 子タスク -->
     <collection property="subTasks"
@@ -26,31 +28,31 @@
   <select id="findAllByList" resultMap="taskResultMap">
     SELECT
       task_id, task_priority, task_name, completed, due_date,
-      parent_task_id, archived, archived_at, list_id
+      parent_task_id, archived, archived_at, list_id,user_id,user_seq
     FROM tasks
     WHERE archived = false
       AND parent_task_id IS NULL
       AND list_id = #{listId}
-    ORDER BY task_priority, due_date
+    ORDER BY user_seq ASC, task_priority, due_date
   </select>
 
   <!-- 親タスク（保管） -->
   <select id="findAllArchivedByList" resultMap="taskResultMap">
     SELECT
       task_id, task_priority, task_name, completed, due_date,
-      parent_task_id, archived, archived_at, list_id
+      parent_task_id, archived, archived_at, list_id,user_id,user_seq
     FROM tasks
     WHERE archived = true
       AND parent_task_id IS NULL
       AND list_id = #{listId}
-    ORDER BY archived_at DESC NULLS LAST, task_id DESC
+    ORDER BY archived_at DESC NULLS LAST, user_seq DESC
   </select>
 
   <!-- 1件取得（必要なら listId 条件付き版も用意可） -->
   <select id="findById" resultMap="taskResultMap">
     SELECT
       task_id, task_priority, task_name, completed, due_date,
-      parent_task_id, archived, archived_at, list_id
+      parent_task_id, archived, archived_at, list_id,user_id,user_seq
     FROM tasks
     WHERE task_id = #{taskId}
   </select>
@@ -59,22 +61,23 @@
   <select id="findByParentId" resultMap="taskResultMap">
     SELECT
       task_id, task_priority, task_name, completed, due_date,
-      parent_task_id, archived, archived_at, list_id
+      parent_task_id, archived, archived_at, list_id,user_id,user_seq
     FROM tasks
     WHERE parent_task_id = #{parentId}
       AND archived = false
       AND list_id = #{listId}
-    ORDER BY task_priority, due_date
+    ORDER BY user_seq ASC , task_priority, due_date
   </select>
 
   <!-- 登録 -->
   <insert id="register" useGeneratedKeys="true" keyProperty="taskId" keyColumn="task_id">
     INSERT INTO tasks (
       task_priority, task_name, completed, due_date,
-      parent_task_id, archived, archived_at, list_id
+      parent_task_id, archived, archived_at, list_id,user_id
     ) VALUES (
       #{taskPriority}, #{taskName}, #{completed}, #{dueDate},
-      #{parentTaskId}, #{archived}, #{archivedAt}, #{listId}
+      #{parentTaskId}, #{archived}, #{archivedAt}, #{listId},
+      #{userId}
     )
   </insert>
 

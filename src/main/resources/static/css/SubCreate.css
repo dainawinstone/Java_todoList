@@ -1,95 +1,84 @@
 @charset "UTF-8";
 
-/*全体のレイアウト*/
+/* ===== ベース ===== */
+*,*::before,*::after{ box-sizing: border-box; }
+:root{
+  --primary:#4CAF50; --primary-hover:#45a049;
+  --muted:#7f8c8d;   --muted-hover:#6b7a7a;
+  --danger:#e0524d;  --danger-hover:#c9443f;
+}
+body{ font-family: Arial, sans-serif; background:#f5f5f5; margin:20px; }
+h1{ color:#333; text-align:center; }
 
-body{
-	font-family: Arial,sens-serif;
-	background-color: #f5f5f5;
-	margin: 20px;		
+/* ===== ツールバー（右にログアウト） ===== */
+.toolbar{ display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin:10px 40px 0; }
+.toolbar .logout-container{ margin-left:auto; }
+.logout-container{ position:static; }
+
+/* ログアウトの白枠・影を強制OFF */
+#logoutForm,
+.toolbar .logout-container > form{
+  background: transparent !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
 }
 
-/*タイトル*/
-
-h1{
-	color: #333;
-	text-align: center;
-	margin-bottom: 30px;	
+/* ===== フォームカード ===== */
+.form-card{
+  background:#fff;
+  width:min(640px, 92vw);
+  margin:30px auto;
+  padding:28px 32px;
+  border-radius:12px;
+  box-shadow:0 10px 22px rgba(0,0,0,.08);
+}
+.form-card label{
+  display:block;
+  margin-top:14px; margin-bottom:6px;
+  color:#555; font-weight:700;
+}
+.form-card input[type="text"],
+.form-card input[type="date"],
+.form-card select{
+  width:100%;
+  padding:10px 12px;
+  border:1px solid #ccc;
+  font-size:14px;
+  border-radius:8px;
+  outline:none;
+  transition:border-color .2s, box-shadow .2s;
+  background:#fff;
+}
+.form-card input[type="text"]:focus,
+.form-card input[type="date"]:focus,
+.form-card select:focus{
+  border-color: var(--primary);
+  box-shadow:0 0 0 3px rgba(76,175,80,.15);
 }
 
-/*フォーム全体*/
-form{
-	background-color: #fff;
-	max-width: 500px;
-	margin: 0 auto;
-	padding: 25px 30px;
-	border-radius: 8px;
-	box-shadow: 0 0 10px rgba(0,0,0,0.1);
+/* ===== ボタン共通 ===== */
+.btn{
+  display:inline-flex; align-items:center; justify-content:center;
+  padding:10px 18px; border:none; border-radius:10px;
+  font-weight:700; cursor:pointer; text-decoration:none;
+  box-shadow:0 2px 6px rgba(0,0,0,.08);
+  transition:transform .02s, box-shadow .2s, background-color .2s, color .2s;
 }
+.btn:focus{ outline:2px solid #333; outline-offset:2px; }
+.btn--block{ width:100%; margin-top:22px; }
+.center-link{ display:block; width:min(640px, 92vw); margin:14px auto 0; text-align:center; }
 
-/*ラベル*/
-form label{
-	display: block;
-	margin-top: 15px;
-	margin-bottom: 5px;
-	color: #555;
-	font-weight: bold;	
-}
+.btn--primary{ background:var(--primary); color:#fff; }
+.btn--primary:hover{ background:var(--primary-hover); transform:translateY(-1px); box-shadow:0 4px 10px rgba(0,0,0,.12); }
+.btn--secondary{ background:#fff; color:var(--primary); border:2px solid var(--primary); }
+.btn--secondary:hover{ background:var(--primary); color:#fff; }
+.btn--ghost{ box-shadow:none; }
+.btn--muted{ background:var(--muted); color:#fff; }
+.btn--muted:hover{ background:var(--muted-hover); }
 
-/*入力欄*/
-
-input[tyoe="text"],
-input[type="date"],
-select{
-	width: 100%;
-	padding: 10px;
-	border: 1px solid #ccc;
-	font-size: 14px;
-	box-sizing: border-box;
-	border-radius: 4px;	
-}
-
-/*登録ボタン*/
-button[type="submit"]{
-	background-color: #4CAF50;
-	color: white;
-	border: none;
-	padding: 12px;
-	width: 100px;
-	font-size: 16px;
-	border-radius: 5px;
-	cursor: pointer;
-	transition: background-color 0,3s;
-	margin-top: 30px;
-}
-
-button[type="submit"]:hover{
-	background-color: #45a049;
-}	
-	
-
-/* ログアウトボタン用コンテナ */
-.logout-container {
-	position: absolute;
-	top: 20px;
-	right: 20px;
-	z-index: 1000;
-}
-
-/* ログアウトボタン */
-.logout-container button {
-	background-color: #7f8c8d;
-	color: white;
-	border: none;
-	border-radius: 5px;
-	padding: 10px 15px;
-	cursor: pointer;
-	transition: background-color 0.3s;
-	font-weight: bold;
-	box-shadow: none;
-}
-
-.logout-container button:hover {
-	background-color: #c0392b;
-}
-	
-
+/* 余白 */
+a{ text-decoration:none; }
+@media (min-height:700px){ .form-card{ margin-top:40px; } }

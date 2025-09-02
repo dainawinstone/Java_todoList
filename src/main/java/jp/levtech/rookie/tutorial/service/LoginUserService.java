@@ -46,5 +46,15 @@ public class LoginUserService {
 				.orElse(null);
 	}
 	
-
+	/**
+	 * ユーザー名からユーザーIDを取得する
+	 * 
+	 * @param userName ユーザー名
+	 * @Return userId ユーザーID
+	 */
+	@Transactional(readOnly = true)
+	public Long findIdByUserName(String userName) {
+        LoginUser user = findByUserName(userName);
+        return (user != null) ? user.getUserId() : null;
+	}
 }

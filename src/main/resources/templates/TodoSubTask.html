@@ -1,48 +1,47 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-	<meta charset="UTF-8">
-	<title>サブタスクを作成する</title>
-	<link rel="stylesheet" th:href="@{/css/SubCreate.css}"/>
+  <meta charset="UTF-8">
+  <title>サブタスク作成</title>
+  <link rel="stylesheet" th:href="@{/css/SubCreate.css}"/>
 </head>
 
 <body>
-	<h1>サブタスク作成</h1>
-	
-	<!--ログアウトボタン配置-->
-	<div class="logout-container">
-		<form method="post" th:action="@{/logout}">
-			<button type="submit">ログアウト</button>
-		</form>
-	</div>
-		
-	<!--サブタスク登録フォーム-->
-	<form th:action="@{/todo/register}" th:object="${createTaskForm}" method="post">
-		<div>
-			<label for= "taskname">タスク名:</label>
-			<input type="text" th:field="*{taskName}" id="taskName" />
-		</div>
-			
-		<div>
-			<label for="taskPriority">優先度:</label>
-				<select th:field="*{taskPriority}" id="taskPriority">
-					<option value="1">高</option>
-					<option value="2">中</option>
-					<option value="3">低</option>
-				</select>
-			</div>
-			
-			<div>
-				<label for="dueDate">期限:</label>
-				<input type="date" th:field="*{dueDate}" id="dueDate"/>
-			</div>
-			
-			<!-- 隠しフィールドで親タスクIDを送信 -->
-			<input type="hidden" th:field="*{parentTaskId}"/>
-			
-			<div>
-				<button type="submit">登録</button>
-			</div>
-		</form>	
+  <!-- ツールバー：右にログアウト -->
+  <div class="toolbar">
+    <div class="logout-container">
+      <form id="logoutForm" method="post" th:action="@{/logout}">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+        <button type="submit" class="btn btn--muted">ログアウト</button>
+      </form>
+    </div>
+  </div>
+
+  <h1>サブタスク作成</h1>
+
+  <!-- サブタスク登録フォーム -->
+  <form class="form-card" th:action="@{/todo/register}" th:object="${createTaskForm}" method="post">
+    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+
+    <label for="taskName">タスク名:</label>
+    <input type="text" th:field="*{taskName}" id="taskName" />
+
+    <label for="taskPriority">優先度:</label>
+    <select th:field="*{taskPriority}" id="taskPriority">
+      <option value="1">高</option>
+      <option value="2">中</option>
+      <option value="3">低</option>
+    </select>
+
+    <label for="dueDate">期限:</label>
+    <input type="date" th:field="*{dueDate}" id="dueDate"/>
+
+    <!-- 親タスクID（hidden） -->
+    <input type="hidden" th:field="*{parentTaskId}"/>
+
+    <button type="submit" class="btn btn--primary btn--block">登録</button>
+  </form>
+
+  <a th:href="@{/todo/}" class="btn btn--secondary btn--ghost center-link">戻る</a>
 </body>
 </html>

@@ -3,26 +3,32 @@
 <head>
 	<meta charset="UTF-8">
 	<title>編集画面</title>	
-	<link rel = "stylesheet" th:href="@{/css/Create.css}"/>
+	<link rel = "stylesheet" th:href="@{/css/Create.css?v=8}"/>
 </head>
 <body>
-	<div class="logout-container">
-		<form method="post" th:action="@{/logout}">
-			<button type="submit">ログアウト</button>
-		</form>
+	<!--ツールバー-->
+	<div class="toolbar">
+		<div class="logout-container">		
+			<form id="logputForm" method="post" th:action="@{/logout}">
+				<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+				<button type="submit" class="btn btn--muted">ログアウト</button>
+			</form>
+		</div>
 	</div>
 	
 	<h1>Todo編集</h1>											
 	
-	<!--/* 更新ボタンをクリックした際に /todo/{taskId}/update に対してPOSTメソッドでHTTPリクエストするためのフォーム。 */-->
-	<form method="post" 
+	<!--更新フォーム-->
+	<form class="form-card"	
+	      method="post" 
 		  th:action="@{/todo/{id}/update(id=${taskId})}"
 		  th:object="${updateTaskForm}">
+		<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
 		
-		 <!--タスク名-->
+		<!--タスク名-->
 		<label for="task-name">タスク名</label>
 		<input id="task-name" type="text" th:field="*{taskName}" />
-		<div th:if="${#fields.hasErrors('taskName')}" th:errors="*{taskName}"></div>
+		<div class="error" th:if="${#fields.hasErrors('taskName')}" th:errors="*{taskName}"></div>
 		
 		<!--完了-->	
 		<label for="task-status">完了</label>
@@ -30,20 +36,19 @@
 		
 		<!--優先度-->
 		<label for="task-priority">優先度</label>
-		 <input id="task-priority" type="number" th:field="*{taskPriority}" min="1" max="3"/>
-		 <div th:if="${#fields.hasErrors('taskPriority')}" th:errors="*{taskPriority}"></div>
+		<input id="task-priority" type="number" th:field="*{taskPriority}" min="1" max="3"/>
+		<div class="error" th:if="${#fields.hasErrors('taskPriority')}" th:errors="*{taskPriority}"></div>
 		
 		<!--締切日-->
 		<label for="due-date">締切日</label>
 		<input id="due-date" type="date" th:field="*{dueDate}" />
-		<div th:if="${#fields.hasErrors('dueDate')}" th:errors="*{dueDate}"></div>
+		<div class="error" th:if="${#fields.hasErrors('dueDate')}" th:errors="*{dueDate}"></div>
 		
 		<!--更新ボタン-->			
-		<button type="submit">更新</button>
-			
-	
-	<!--ホーム画面に戻るためのリンク-->	
-	<a th:href="@{/todo/}" class="back-link">戻る</a>
-
+		<button type="submit" class="btn btn--primary btn--block">更新</button>
+	</form>
+					
+	<!--戻るボタン-->	
+	<a th:href="@{/todo/}" class="btn btn--secondary btn--ghost center-link">戻る</a>
 </body>
 </html>

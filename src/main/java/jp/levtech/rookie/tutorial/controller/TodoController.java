@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -26,6 +27,7 @@ import jp.levtech.rookie.tutorial.controller.view.TaskViewRow;
 import jp.levtech.rookie.tutorial.model.Task;
 import jp.levtech.rookie.tutorial.repository.TaskRepository;
 import jp.levtech.rookie.tutorial.service.CurrentListService;
+import jp.levtech.rookie.tutorial.service.LoginUserService;
 import jp.levtech.rookie.tutorial.service.TaskHierarchyViewService;
 
 /*
@@ -38,10 +40,14 @@ public class TodoController {
 
     private final TaskRepository taskRepository;
     private final CurrentListService currentListService;
-
-    public TodoController(TaskRepository taskRepository, CurrentListService currentListService) {
+    private final LoginUserService loginUserService;
+   
+    public TodoController(TaskRepository taskRepository, 
+    					  CurrentListService currentListService,
+    					  LoginUserService loginUserService) {
         this.taskRepository = taskRepository;
         this.currentListService = currentListService;
+        this.loginUserService = loginUserService;
     }
 
     /** 未保管(archived = false)の親タスク一覧を表示する
@@ -157,7 +163,9 @@ public class TodoController {
     @PostMapping("/todo/register")
     public String register(
             @ModelAttribute("createTaskForm") @Valid CreateTaskForm form,
-            BindingResult bindingResult) {
+            BindingResult bindingResult,
+            @AuthenticationPrincipal(expression = "username") String username
+    ) {
     	
     	//入力エラーがあれば作成画面に戻る
         if (bindingResult.hasErrors()) {
@@ -165,6 +173,11 @@ public class TodoController {
         }
 
         long listId = currentListService.getOrCreateListIdForCurrentUser();
+        
+        Long userId = loginUserService.findIdByUserName(username);
+        if (userId == null) {
+            throw new IllegalStateException("ログインユーザーが取得できませんでした: " + username);
+        }
         
         //フォームの値をエンティティへ移し替え        
         Task task = new Task();
@@ -176,11 +189,15 @@ public class TodoController {
         task.setSubTasks(List.of());
         task.setArchived(false);
         task.setArchivedAt(null);
-        task.setListId(listId);                 // ★必須
+        task.setListId(listId);
+        task.setUserId(userId);
 
         taskRepository.register(task);
         return "redirect:/todo/";
     }
+        
+        
+    
 
     /** 
      * 編集画面 表示

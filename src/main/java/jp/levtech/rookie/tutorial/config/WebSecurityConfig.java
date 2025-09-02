@@ -26,14 +26,16 @@ public class WebSecurityConfig {
 		http
 			// formのログインに関する設定
 			.formLogin(form -> form				
-				.loginPage("/login")								
+				.loginPage("/login")
+				.defaultSuccessUrl("/todo/", true)
+				.failureUrl("/login?error")
 				.permitAll()
 			)
 			
 			// ログアウトに関する設定
 			.logout(logout -> logout
 				.logoutUrl("/logout")
-				.logoutSuccessUrl("/?logout")
+				.logoutSuccessUrl("/login?logout")
 				.permitAll()
 			)
 			// 認可に関する設定
@@ -41,8 +43,8 @@ public class WebSecurityConfig {
 				// CSS, JavaScriptなど静的リソースへのアクセスを全ユーザーに許可する。
 				.requestMatchers(PathRequest.toStaticResources().atCommonLocations())
 				.permitAll()
-				// ホーム画面とサインイン画面へのアクセスを全ユーザーに許可する。
-				.requestMatchers("/", "/signin","/signin/**","/signup-success")
+				// ホーム画面・サインイン画面・ログイン画面・エラー画面へのアクセスを全ユーザーに許可する。
+				.requestMatchers("/", "/signin","/signin/**","/signup-success", "/login", "/error")
 				.permitAll()
 				// その他へのアクセスを認証済みのユーザーのみに制限する。
 				.anyRequest()

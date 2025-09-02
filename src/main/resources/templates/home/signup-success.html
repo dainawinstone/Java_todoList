@@ -1,16 +1,20 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+	
 <head>
     <meta charset="UTF-8">
     <title>登録完了</title>
     <link rel="stylesheet" th:href="@{/css/Signin.css}"/>
 </head>
+
 <body>
     <div class="container">
         <h1>登録完了</h1>
+		
 		<!--登録完了メッセージ-->
         <p><span th:text="${userName}"></span> さん、登録が完了しました！</p>
         
+		<!--ログイン画面へ遷移するためのリンク。-->
         <a th:href="@{/login}">ログイン画面へ</a>
     </div>
 </body>

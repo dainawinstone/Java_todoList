@@ -65,5 +65,15 @@ public class Task {
 	 * リストIDを表すプロパティ
 	 */	
 	private Long listId;
+	
+	/*
+	 * ユーザーIDを表すプロパティ
+	 */
+	private Long userId;
+	
+	/*
+	 * ユーザー内の連番を表すプロパティ
+	 */
+	private  Integer userSeq;
 
 }

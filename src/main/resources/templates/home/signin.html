@@ -1,14 +1,10 @@
 <!DOCTYPE html>
-<!--/*
-	thから始まる属性はHTMLの仕様では許可されていない。
-	そのため、htmlタグにxmlns:th属性を追加して、IDLが警告を出さないようにしている。
- */-->
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
 	<meta charset="UTF-8">
 	<title>新規登録</title>
 	<link rel="stylesheet" th:href="@{/css/Signin.css}"/>	
-
 </head>
 
 <body>
@@ -19,38 +15,40 @@
 		    <strong th:text="${errorMessage}">エラーメッセージ</strong>
 		</div>
 		
-		<!--/* 登録ボタンをクリックした際に /signin に対してPOSTメソッドでHTTPリクエストするためのフォーム。 */-->
+		<!--登録ボタンをクリックした際に /signin に対してPOSTメソッドでHTTPリクエストするためのフォーム。-->
 		<form method="post" th:action="@{/signin}" th:object="${createLoginUserForm}">
 				
 		 
-		<div th:if="${#fields.hasGlobalErrors()}" style="color:#b00020; margin-bottom:12px;">
-			<ul style="margin:0; padding-left:1.2em;">
-		    <li th:each="err : ${#fields.globalErrors()}" th:text="${err}"></li>
-		    </ul>
-		</div>
+			<div th:if="${#fields.hasGlobalErrors()}" style="color:#b00020; margin-bottom:12px;">
+				<ul style="margin:0; padding-left:1.2em;">
+		    		<li th:each="err : ${#fields.globalErrors()}" th:text="${err}"></li>
+		    	</ul>
+			</div>
 		
-		
+			<!--ユーザー名-->		
 			<div>
 				<label for="user-name">ユーザー名</label>			
 				<input id="user-name" type="text" placeholder="ユーザー名" th:field="*{userName}">			
 				<!--/* バリデーションエラーがある場合はエラー内容を表示する。 */-->			
 				<span th:if="${#fields.hasErrors('userName')}" th:errors="*{userName}" style="color: red;"></span>
 			</div>
-
-		
+			
+			<!--パスワード-->
 			<div>			
 				<label for="password">パスワード</label>			
 				<input id="password" type="password" placeholder="パスワード" th:field="*{password}">			
-				<!--/* バリデーションエラーがある場合はエラー内容を表示する。 */-->			
+				<!--バリデーションエラーがある場合はエラー内容を表示する。 -->			
 				<span th:if="${#fields.hasErrors('password')}" th:errors="*{password}" style="color: red;"></span>
 			</div>
 			
+			<!--CSRF-->
 			<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
-				
+			
+			<!--登録ボタン-->
 			<button type="submit">登録</button>
 		</form>
 		
-		<!--/* ホーム画面へ遷移するためのリンク。 */-->
+		<!--ホーム画面へ遷移するためのリンク。-->
 		<a href="index.html" th:href="@{/}">戻る</a>
 	</div>
 	
